@@ -11,7 +11,15 @@ endif()
 
 project ("StellarNurseryEngine")
 
+set(PLATFORM_EXTERNALS_PREFIX ${PROJECT_SOURCE_DIR}/external/Windows/amd64)
+
 add_executable(StellarNurseryEngine)
+
+# link GLFW
+set(GLFW_LIB_DIR ${PLATFORM_EXTERNALS_PREFIX}/glfw-3.4/lib-vc2022)
+set(GLFW_LIB_NAME glfw3.lib)
+include_directories(${PLATFORM_EXTERNALS_PREFIX}/glfw-3.4/include)
+target_link_libraries(StellarNurseryEngine ${GLFW_LIB_DIR}/${GLFW_LIB_NAME})
 
 # Include sub-projects.
 add_subdirectory ("src")

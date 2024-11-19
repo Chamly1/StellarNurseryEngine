@@ -26,6 +26,9 @@ set(GLFW_LIB_NAME glfw3.lib)
 include_directories(${PLATFORM_EXTERNALS_PREFIX}/glfw-3.4/include)
 target_link_libraries(StellarNurseryEngine ${GLFW_LIB_DIR}/${GLFW_LIB_NAME})
 
+# link GLM
+include_directories(external/glm-1.0.1)
+
 # Include sub-projects.
 add_subdirectory ("src")
 

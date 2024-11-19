@@ -15,6 +15,11 @@ set(PLATFORM_EXTERNALS_PREFIX ${PROJECT_SOURCE_DIR}/external/Windows/amd64)
 
 add_executable(StellarNurseryEngine)
 
+# link Vulkan
+find_package(Vulkan REQUIRED)
+include_directories(${Vulkan_INCLUDE_DIR})
+target_link_libraries(StellarNurseryEngine ${Vulkan_LIBRARY})
+
 # link GLFW
 set(GLFW_LIB_DIR ${PLATFORM_EXTERNALS_PREFIX}/glfw-3.4/lib-vc2022)
 set(GLFW_LIB_NAME glfw3.lib)

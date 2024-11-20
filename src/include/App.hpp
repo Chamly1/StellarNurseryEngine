@@ -34,6 +34,7 @@ private:
 
 	bool checkValidationLayerSupport();
 	std::vector<const char*> getRequiredExtensions();
+	void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 
 	void initWindow();
 	void createInstance();

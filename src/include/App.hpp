@@ -2,6 +2,13 @@
 #include <vulkan/vulkan.h>
 
 #include <vector>
+#include <optional>
+
+struct QueueFamilyIndices {
+	std::optional<uint32_t> graphicsFamily;
+
+	bool isComplete();
+};
 
 class App {
 public:
@@ -11,6 +18,7 @@ private:
 	GLFWwindow* window;
 	VkInstance instance;
 	VkDebugUtilsMessengerEXT debugMessenger;
+	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 	const uint32_t WIDTH = 800;
 	const uint32_t HEIGHT = 600;
 	const char* APPLICATION_NAME = "Title";
@@ -39,6 +47,9 @@ private:
 	void initWindow();
 	void createInstance();
 	void setupDebugMessenger();
+	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+	bool isDeviceSuitable(VkPhysicalDevice device);
+	void pickPhysicalDevice();
 	void initVulkan();
 	void mainLoop();
 	void cleanup();

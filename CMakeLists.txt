@@ -11,6 +11,8 @@ endif()
 
 project ("StellarNurseryEngine")
 
+set (CMAKE_CXX_STANDARD 17)
+
 set(PLATFORM_EXTERNALS_PREFIX ${PROJECT_SOURCE_DIR}/external/Windows/amd64)
 
 add_executable(StellarNurseryEngine)

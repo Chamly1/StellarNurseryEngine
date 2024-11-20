@@ -4,6 +4,10 @@
 #include <stdexcept>
 #include <iostream>
 
+bool QueueFamilyIndices::isComplete() {
+	return graphicsFamily.has_value();
+}
+
 void App::run() {
 	initWindow();
 	initVulkan();
@@ -133,9 +137,72 @@ void App::setupDebugMessenger() {
 	}
 }
 
+QueueFamilyIndices App::findQueueFamilies(VkPhysicalDevice device) {
+	QueueFamilyIndices indices;
+
+	uint32_t queueFamilyCount = 0;
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+	for (int i = 0; i < queueFamilies.size(); i++) {
+		if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+			indices.graphicsFamily = i;
+		}
+
+		if (indices.isComplete()) {
+			break;
+		}
+	}
+
+	return indices;
+}
+
+bool App::isDeviceSuitable(VkPhysicalDevice device) {
+	VkPhysicalDeviceProperties deviceProperties;
+	vkGetPhysicalDeviceProperties(device, &deviceProperties);
+	bool isDevicePropertiesSuitable = deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
+
+	VkPhysicalDeviceFeatures deviceFeatures;
+	vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+	bool isDeviceFeaturesSuitable = deviceFeatures.geometryShader;
+
+	QueueFamilyIndices indices = findQueueFamilies(device);
+	bool isQueueFamilyIndicesSuitable = indices.isComplete();
+
+	return isDevicePropertiesSuitable && 
+		isDeviceFeaturesSuitable &&
+		isQueueFamilyIndicesSuitable;
+}
+
+void App::pickPhysicalDevice() {
+	uint32_t deviceCount = 0;
+	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+
+	if (deviceCount == 0) {
+		throw std::runtime_error("Failed to find GPUs with Vulkan support!");
+	}
+
+	std::vector<VkPhysicalDevice> devices(deviceCount);
+	vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+
+	for (const auto& device : devices) {
+		if (isDeviceSuitable(device)) {
+			physicalDevice = device;
+			break;
+		}
+	}
+
+	if (physicalDevice == VK_NULL_HANDLE) {
+		throw std::runtime_error("Failed to find suitable GPU!");
+	}
+}
+
 void App::initVulkan() {
 	createInstance();
 	setupDebugMessenger();
+	pickPhysicalDevice();
 }
 
 void App::mainLoop() {

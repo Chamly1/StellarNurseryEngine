@@ -19,6 +19,8 @@ private:
 	VkInstance instance;
 	VkDebugUtilsMessengerEXT debugMessenger;
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+	VkDevice device;
+	VkQueue graphicsQueue;
 	const uint32_t WIDTH = 800;
 	const uint32_t HEIGHT = 600;
 	const char* APPLICATION_NAME = "Title";
@@ -50,6 +52,7 @@ private:
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 	bool isDeviceSuitable(VkPhysicalDevice device);
 	void pickPhysicalDevice();
+	void createLogicalDevice();
 	void initVulkan();
 	void mainLoop();
 	void cleanup();

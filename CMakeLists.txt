@@ -36,3 +36,30 @@ add_subdirectory ("src")
 
 target_link_libraries(StellarNurseryEngine main_obj)
 
+#*******************Compile Shaders*******************
+
+set(SRC_SHADERS_DIR "${PROJECT_SOURCE_DIR}/resources/shaders")
+set(DEST_SHADERS_DIR "${CMAKE_BINARY_DIR}/resources/shaders")
+file(MAKE_DIRECTORY ${DEST_SHADERS_DIR})
+
+file(GLOB SRC_SHADER_FILES "${SRC_SHADERS_DIR}/*")
+
+#add_custom_target(CompileShaders)
+
+foreach(SRC_SHADER_FILE ${SRC_SHADER_FILES})
+
+	get_filename_component(FILE_NAME ${SRC_SHADER_FILE} NAME)
+	add_custom_command(TARGET StellarNurseryEngine
+			POST_BUILD
+			COMMAND ${Vulkan_GLSLC_EXECUTABLE} ${SRC_SHADER_FILE} -o ${DEST_SHADERS_DIR}/${FILE_NAME}.spv)
+
+	#get_filename_component(EXTENSION ${SRC_SHADER_FILE} EXT)
+	#if(${EXTENSION} STREQUAL ".vert")
+	#	message("vertex shader: ${SRC_SHADER_FILE}")
+	#elseif(${EXTENSION} STREQUAL ".frag")
+	#	message("fragment shader: ${SRC_SHADER_FILE}")
+	#endif()
+endforeach()
+
+#*****************Compile Shaders end*****************
+

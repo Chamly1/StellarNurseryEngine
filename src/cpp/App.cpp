@@ -477,8 +477,8 @@ VkShaderModule App::createShaderModule(const std::vector<char>& code) {
 }
 
 void App::createGraphicsPipeline() {
-	std::vector<char> vertShaderCode = readFile("resource/shaders/triangle.vert.spv");
-	std::vector<char> fragShaderCode = readFile("resource/shaders/triangle.frag.spv");
+	std::vector<char> vertShaderCode = readFile("./resources/shaders/triangle.vert.spv");
+	std::vector<char> fragShaderCode = readFile("./resources/shaders/triangle.frag.spv");
 
 	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
 	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);

@@ -41,6 +41,10 @@ private:
 
 	std::vector<VkImageView> swapChainImageViews;
 
+	VkRenderPass renderPass;
+	VkPipelineLayout pipelineLayout;
+	VkPipeline graphicsPipeline;
+
 	const uint32_t WIDTH = 800;
 	const uint32_t HEIGHT = 600;
 	const char* APPLICATION_NAME = "Title";
@@ -87,6 +91,11 @@ private:
 	void createSwapChain();
 
 	void createImageViews();
+
+	void createRenderPass();
+
+	VkShaderModule createShaderModule(const std::vector<char>& code);
+	void createGraphicsPipeline();
 
 	void initVulkan();
 	void mainLoop();

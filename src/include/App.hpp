@@ -45,6 +45,8 @@ private:
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
 
+	std::vector<VkFramebuffer> swapChainFramebuffers;
+
 	const uint32_t WIDTH = 800;
 	const uint32_t HEIGHT = 600;
 	const char* APPLICATION_NAME = "Title";
@@ -96,6 +98,8 @@ private:
 
 	VkShaderModule createShaderModule(const std::vector<char>& code);
 	void createGraphicsPipeline();
+
+	void createFramebuffers();
 
 	void initVulkan();
 	void mainLoop();

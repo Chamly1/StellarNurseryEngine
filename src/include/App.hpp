@@ -47,6 +47,9 @@ private:
 
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 
+	VkCommandPool commandPool;
+	VkCommandBuffer commandBuffer;
+
 	const uint32_t WIDTH = 800;
 	const uint32_t HEIGHT = 600;
 	const char* APPLICATION_NAME = "Title";
@@ -100,6 +103,10 @@ private:
 	void createGraphicsPipeline();
 
 	void createFramebuffers();
+
+	void createCoomandPool();
+	void createCommandBuffer();
+	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
 	void initVulkan();
 	void mainLoop();

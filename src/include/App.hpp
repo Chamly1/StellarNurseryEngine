@@ -1,4 +1,5 @@
 #include "Window.hpp"
+#include "Pipeline.hpp"
 
 #include <vector>
 #include <optional>
@@ -26,7 +27,8 @@ private:
 	const char* APPLICATION_NAME = "Title";
 	const char* ENGINE_NAME = "Stellar Nursery Engine";
 
-	Window mWindow{ WIDTH, HEIGHT, APPLICATION_NAME };
+	Window mWindow{WIDTH, HEIGHT, APPLICATION_NAME};
+	Pipeline mPipeline{"./resources/shaders/triangle.vert.spv", "./resources/shaders/triangle.frag.spv"};
 
 	VkInstance instance;
 	VkDebugUtilsMessengerEXT debugMessenger;

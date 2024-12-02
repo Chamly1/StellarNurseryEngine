@@ -83,12 +83,7 @@ void App::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& c
 }
 
 void App::initWindow() {
-	glfwInit();
-
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-	window = glfwCreateWindow(WIDTH, HEIGHT, APPLICATION_NAME, nullptr, nullptr);
+	
 }
 
 void App::createInstance() {
@@ -141,7 +136,7 @@ void App::setupDebugMessenger() {
 }
 
 void App::createSurface() {
-	if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
+	if (glfwCreateWindowSurface(instance, mWindow.getWindow(), nullptr, &surface) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to create window surface!");
 	}
 }
@@ -333,7 +328,7 @@ VkExtent2D App::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
 	}
 	else {
 		int width, height;
-		glfwGetFramebufferSize(window, &width, &height);
+		glfwGetFramebufferSize(mWindow.getWindow(), &width, &height);
 
 		VkExtent2D actualExtent = {
 			static_cast<uint32_t>(width),
@@ -764,7 +759,7 @@ void App::drawFrame() {
 }
 
 void App::mainLoop() {
-	while (!glfwWindowShouldClose(window)) {
+	while (!mWindow.shouldClose()) {
 		glfwPollEvents();
 		drawFrame();
 	}
@@ -795,7 +790,4 @@ void App::cleanup() {
 	}
 	vkDestroySurfaceKHR(instance, surface, nullptr);
 	vkDestroyInstance(instance, nullptr);
-
-	glfwDestroyWindow(window);
-	glfwTerminate();
 }

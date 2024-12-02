@@ -1,5 +1,4 @@
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
+#include "Window.hpp"
 
 #include <vector>
 #include <optional>
@@ -22,7 +21,12 @@ public:
 	void run();
 
 private:
-	GLFWwindow* window;
+	const int WIDTH = 800;
+	const int HEIGHT = 600;
+	const char* APPLICATION_NAME = "Title";
+	const char* ENGINE_NAME = "Stellar Nursery Engine";
+
+	Window mWindow{ WIDTH, HEIGHT, APPLICATION_NAME };
 
 	VkInstance instance;
 	VkDebugUtilsMessengerEXT debugMessenger;
@@ -53,11 +57,6 @@ private:
 	VkSemaphore imageAvailableSemaphore;
 	VkSemaphore renderFinishedSemaphore;
 	VkFence inFlightFence;
-
-	const uint32_t WIDTH = 800;
-	const uint32_t HEIGHT = 600;
-	const char* APPLICATION_NAME = "Title";
-	const char* ENGINE_NAME = "Stellar Nursery Engine";
 
 	const std::vector<const char*> validationLayers = {
 		"VK_LAYER_KHRONOS_validation"

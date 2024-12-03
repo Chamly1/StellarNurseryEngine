@@ -317,3 +317,7 @@ Device::~Device() {
 	vkDestroySurfaceKHR(mInstance, mSurface, nullptr);
 	vkDestroyInstance(mInstance, nullptr);
 }
+
+VkDevice Device::device() {
+	return mDevice;
+}

@@ -69,6 +69,8 @@ public:
 	Device(Window& window);
 	~Device();
 
+	VkDevice device();
+
 	Device(const Device& other) = delete;
 	Device& operator=(const Device& other) = delete;
 	Device(Device&& other) = delete;

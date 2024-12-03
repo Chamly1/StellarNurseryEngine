@@ -1,4 +1,5 @@
 #include "Window.hpp"
+#include "Device.hpp"
 #include "Pipeline.hpp"
 
 #include <vector>
@@ -15,7 +16,8 @@ private:
 	const char* ENGINE_NAME = "Stellar Nursery Engine";
 
 	Window mWindow{WIDTH, HEIGHT, APPLICATION_NAME};
-	Pipeline mPipeline{"./resources/shaders/triangle.vert.spv", "./resources/shaders/triangle.frag.spv"};
+	Device mDevice{ mWindow };
+	Pipeline mPipeline{mDevice, "./resources/shaders/triangle.vert.spv", "./resources/shaders/triangle.frag.spv", Pipeline::getDefaultPipelineConfigInfo(static_cast<uint32_t>(WIDTH), static_cast<uint32_t>(HEIGHT))};
 
 	VkSwapchainKHR swapChain;
 	std::vector<VkImage> swapChainImages;
@@ -26,7 +28,7 @@ private:
 
 	VkRenderPass renderPass;
 	VkPipelineLayout pipelineLayout;
-	VkPipeline graphicsPipeline;
+	
 
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 
@@ -49,7 +51,7 @@ private:
 
 	void createRenderPass();
 
-	VkShaderModule createShaderModule(const std::vector<char>& code);
+	
 	void createGraphicsPipeline();
 
 	void createFramebuffers();

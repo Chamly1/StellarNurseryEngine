@@ -19,6 +19,7 @@ public:
 	~Window();
 
 	bool shouldClose();
+	void createSurface(VkInstance instance, VkSurfaceKHR *surface);
 	// TODO: stub method
 	GLFWwindow* getWindow();
 

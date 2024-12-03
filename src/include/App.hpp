@@ -4,19 +4,6 @@
 #include <vector>
 #include <optional>
 
-struct QueueFamilyIndices {
-	std::optional<uint32_t> graphicsFamily;
-	std::optional<uint32_t> presentFamily;
-
-	bool isComplete();
-};
-
-struct SwapChainSupportDetails {
-	VkSurfaceCapabilitiesKHR capabilities;
-	std::vector<VkSurfaceFormatKHR> formats;
-	std::vector<VkPresentModeKHR> presentModes;
-};
-
 class App {
 public:
 	void run();
@@ -29,16 +16,6 @@ private:
 
 	Window mWindow{WIDTH, HEIGHT, APPLICATION_NAME};
 	Pipeline mPipeline{"./resources/shaders/triangle.vert.spv", "./resources/shaders/triangle.frag.spv"};
-
-	VkInstance instance;
-	VkDebugUtilsMessengerEXT debugMessenger;
-	VkSurfaceKHR surface;
-
-	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-	VkDevice device;
-
-	VkQueue graphicsQueue;
-	VkQueue presentQueue;
 
 	VkSwapchainKHR swapChain;
 	std::vector<VkImage> swapChainImages;
@@ -53,47 +30,15 @@ private:
 
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 
-	VkCommandPool commandPool;
+	
 	VkCommandBuffer commandBuffer;
 
 	VkSemaphore imageAvailableSemaphore;
 	VkSemaphore renderFinishedSemaphore;
 	VkFence inFlightFence;
 
-	const std::vector<const char*> validationLayers = {
-		"VK_LAYER_KHRONOS_validation"
-	};
-
-	const std::vector<const char*> deviceExtensions = {
-		VK_KHR_SWAPCHAIN_EXTENSION_NAME
-	};
-
-	#ifdef NDEBUG
-	const bool enableValidationLayers = false;
-	#else
-	const bool enableValidationLayers = true;
-	#endif
-
-	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
-		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-		VkDebugUtilsMessageTypeFlagsEXT messageType,
-		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-		void* pUserData);
-
-	bool checkValidationLayerSupport();
-	std::vector<const char*> getRequiredExtensions();
-	void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
-
 	void initWindow();
-	void createInstance();
-	void setupDebugMessenger();
-	void createSurface();
-	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
-	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
-	bool checkDeviceExtensionSupport(VkPhysicalDevice device);
-	bool isDeviceSuitable(VkPhysicalDevice device);
-	void pickPhysicalDevice();
-	void createLogicalDevice();
+	
 
 	VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
@@ -109,7 +54,7 @@ private:
 
 	void createFramebuffers();
 
-	void createCoomandPool();
+	
 	void createCommandBuffer();
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 

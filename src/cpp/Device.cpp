@@ -321,3 +321,15 @@ Device::~Device() {
 VkDevice Device::device() {
 	return mDevice;
 }
+
+VkSurfaceKHR Device::surface() {
+	return mSurface;
+}
+
+SwapChainSupportDetails Device::getSwapChainSupport() {
+	return querySwapChainSupport(mPhysicalDevice);
+}
+
+QueueFamilyIndices Device::findPhysicalQueueFamilies() {
+	return findQueueFamilies(mPhysicalDevice);
+}

@@ -30,3 +30,7 @@ void Window::createSurface(VkInstance instance, VkSurfaceKHR* surface) {
 GLFWwindow* Window::getWindow() {
 	return mWindow;
 }
+
+VkExtent2D Window::getExtent() {
+	return { static_cast<uint32_t>(mWidth), static_cast<uint32_t>(mHeight) };
+}

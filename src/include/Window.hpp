@@ -22,6 +22,7 @@ public:
 	void createSurface(VkInstance instance, VkSurfaceKHR *surface);
 	// TODO: stub method
 	GLFWwindow* getWindow();
+	VkExtent2D getExtent();
 
 	Window(const Window& other) = delete;
 	Window& operator=(const Window& other) = delete;

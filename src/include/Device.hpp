@@ -70,6 +70,10 @@ public:
 	~Device();
 
 	VkDevice device();
+	VkSurfaceKHR surface();
+
+	SwapChainSupportDetails getSwapChainSupport();
+	QueueFamilyIndices findPhysicalQueueFamilies();
 
 	Device(const Device& other) = delete;
 	Device& operator=(const Device& other) = delete;

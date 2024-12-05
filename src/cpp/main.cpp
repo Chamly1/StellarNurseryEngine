@@ -1,11 +1,11 @@
-#include "App.hpp"
+#include "Application.hpp"
 
 #include <stdexcept>
 #include <iostream>
 
 int main() {
 
-	App app;
+	Application app;
 
 	try {
 		app.run();

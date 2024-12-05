@@ -326,6 +326,18 @@ VkSurfaceKHR Device::surface() {
 	return mSurface;
 }
 
+VkCommandPool Device::getCommandPool() {
+	return mCommandPool;
+}
+
+VkQueue Device::getGraphicsQueue() {
+	return mGraphicsQueue;
+}
+
+VkQueue Device::getPresentQueue() {
+	return mPresentQueue;
+}
+
 SwapChainSupportDetails Device::getSwapChainSupport() {
 	return querySwapChainSupport(mPhysicalDevice);
 }

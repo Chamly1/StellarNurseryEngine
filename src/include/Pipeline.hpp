@@ -29,12 +29,13 @@ private:
 	VkShaderModule createShaderModule(const std::vector<char>& code);
 
 public:
-
 	Pipeline(Device& device, 
 		const std::string& vertFilepath, 
 		const std::string& fragFilepath,
 		const PipelineConfigInfo& configInfo);
 	~Pipeline();
+
+	void bind(VkCommandBuffer commandBuffer);
 
 	static PipelineConfigInfo getDefaultPipelineConfigInfo(uint32_t width, uint32_t height);
 

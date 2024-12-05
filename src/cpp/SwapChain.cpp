@@ -225,3 +225,61 @@ SwapChain::~SwapChain() {
 	}
 	vkDestroySwapchainKHR(mDevice.device(), mSwapChain, nullptr);
 }
+
+uint32_t SwapChain::getWidth() {
+	return mSwapChainExtent.width;
+}
+
+uint32_t SwapChain::getHeight() {
+	return mSwapChainExtent.height;
+}
+
+VkFramebuffer SwapChain::getFrameBuffer(int index) {
+	return mSwapChainFramebuffers[index];
+}
+
+VkRenderPass SwapChain::getRenderPass() {
+	return mRenderPass;
+}
+
+VkExtent2D SwapChain::getSwapChainExtent() {
+	return mSwapChainExtent;
+}
+
+VkResult SwapChain::acquireNextImage(uint32_t* imageIndex) {
+	vkWaitForFences(mDevice.device(), 1, &mInFlightFence, VK_TRUE, UINT64_MAX);
+	vkResetFences(mDevice.device(), 1, &mInFlightFence);
+
+	return vkAcquireNextImageKHR(mDevice.device(), mSwapChain, UINT64_MAX, mImageAvailableSemaphore, VK_NULL_HANDLE, imageIndex);
+}
+
+VkResult SwapChain::submitCommandBuffer(const VkCommandBuffer* buffer, uint32_t imageIndex) {
+	VkSubmitInfo submitInfo = VkSubmitInfo();
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	VkSemaphore waitSemaphores[] = { mImageAvailableSemaphore };
+	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+	submitInfo.waitSemaphoreCount = 1;
+	submitInfo.pWaitSemaphores = waitSemaphores;
+	submitInfo.pWaitDstStageMask = waitStages;
+	submitInfo.commandBufferCount = 1;
+	submitInfo.pCommandBuffers = buffer;
+	VkSemaphore signalSemaphores[] = { mRenderFinishedSemaphore };
+	submitInfo.signalSemaphoreCount = 1;
+	submitInfo.pSignalSemaphores = signalSemaphores;
+
+	if (vkQueueSubmit(mDevice.getGraphicsQueue(), 1, &submitInfo, mInFlightFence) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to submit draw command buffer!");
+	}
+
+	VkPresentInfoKHR presentInfo = VkPresentInfoKHR();
+	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+	presentInfo.waitSemaphoreCount = 1;
+	presentInfo.pWaitSemaphores = signalSemaphores;
+	VkSwapchainKHR swapChains[] = { mSwapChain };
+	presentInfo.swapchainCount = 1;
+	presentInfo.pSwapchains = swapChains;
+	presentInfo.pImageIndices = &imageIndex;
+	presentInfo.pResults = nullptr; // Optional
+
+	return vkQueuePresentKHR(mDevice.getPresentQueue(), &presentInfo);
+}

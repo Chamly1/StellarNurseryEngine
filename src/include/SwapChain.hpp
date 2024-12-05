@@ -38,6 +38,15 @@ public:
 	SwapChain(Device& device, VkExtent2D windowExtent);
 	~SwapChain();
 
+	uint32_t getWidth();
+	uint32_t getHeight();
+	VkFramebuffer getFrameBuffer(int index);
+	VkRenderPass getRenderPass();
+	VkExtent2D getSwapChainExtent();
+
+	VkResult acquireNextImage(uint32_t* imageIndex);
+	VkResult submitCommandBuffer(const VkCommandBuffer* buffer, uint32_t imageIndex);
+
 	SwapChain(const SwapChain& other) = delete;
 	SwapChain& operator=(const SwapChain& other) = delete;
 	SwapChain(SwapChain&& other) = delete;

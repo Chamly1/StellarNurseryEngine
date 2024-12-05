@@ -54,6 +54,15 @@ Pipeline::Pipeline(Device& device,
 	vertexInputInfo.pVertexAttributeDescriptions = nullptr;
 	vertexInputInfo.pVertexBindingDescriptions = nullptr;
 
+	/*std::vector<VkDynamicState> dynamicStates = {
+		VK_DYNAMIC_STATE_VIEWPORT,
+		VK_DYNAMIC_STATE_SCISSOR
+	};
+	VkPipelineDynamicStateCreateInfo dynamicState{};
+	dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+	dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
+	dynamicState.pDynamicStates = dynamicStates.data();*/
+
 	VkPipelineViewportStateCreateInfo viewportInfo{};
 	viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 	viewportInfo.viewportCount = 1;
@@ -89,6 +98,11 @@ Pipeline::Pipeline(Device& device,
 
 Pipeline::~Pipeline() {
 	vkDestroyPipeline(mDevice.device(), mGraphicsPipeline, nullptr);
+}
+
+void Pipeline::bind(VkCommandBuffer commandBuffer) {
+	// The second parameter specifies if the pipeline object is a graphics or compute pipeline 
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mGraphicsPipeline);
 }
 
 PipelineConfigInfo Pipeline::getDefaultPipelineConfigInfo(uint32_t width, uint32_t height) {

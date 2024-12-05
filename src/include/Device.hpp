@@ -69,8 +69,11 @@ public:
 	Device(Window& window);
 	~Device();
 
-	VkDevice device();
-	VkSurfaceKHR surface();
+	VkDevice device(); // TODO: rename to getDevice()
+	VkSurfaceKHR surface(); // TODO: rename to getSurface()
+	VkCommandPool getCommandPool();
+	VkQueue getGraphicsQueue();
+	VkQueue getPresentQueue();
 
 	SwapChainSupportDetails getSwapChainSupport();
 	QueueFamilyIndices findPhysicalQueueFamilies();

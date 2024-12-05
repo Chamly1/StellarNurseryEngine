@@ -6,6 +6,7 @@
 #include "vulkan/vulkan.h"
 
 #include <string>
+#include <memory>
 
 struct PipelineConfigInfo {
 	VkViewport viewport;
@@ -19,6 +20,16 @@ struct PipelineConfigInfo {
 	VkPipelineLayout pipelineLayout = nullptr;
 	VkRenderPass renderPass = nullptr;
 	uint32_t subpass = 0;
+
+	PipelineConfigInfo() = default;
+
+	// Delete default copy/move constructor/asigne operator beacuse colorBlendInfo
+	// field contains pointer to colorBlendAttachment field which became invalid
+	// after shallow copy
+	PipelineConfigInfo(const PipelineConfigInfo& other) = delete;
+	PipelineConfigInfo& operator=(const PipelineConfigInfo& other) = delete;
+	PipelineConfigInfo(PipelineConfigInfo&& other) = delete;
+	PipelineConfigInfo& operator=(PipelineConfigInfo&& other) = delete;
 };
 
 class Pipeline {
@@ -37,7 +48,7 @@ public:
 
 	void bind(VkCommandBuffer commandBuffer);
 
-	static PipelineConfigInfo getDefaultPipelineConfigInfo(uint32_t width, uint32_t height);
+	static std::unique_ptr<PipelineConfigInfo> getDefaultPipelineConfigInfo(uint32_t width, uint32_t height);
 
 	Pipeline(const Pipeline& other) = delete;
 	Pipeline& operator=(const Pipeline& other) = delete;

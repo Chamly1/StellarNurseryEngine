@@ -14,15 +14,15 @@ void Application::createPipelineLayout() {
 }
 
 void Application::createPipeline() {
-	PipelineConfigInfo pipelineConfig = Pipeline::getDefaultPipelineConfigInfo(mSwapChain.getWidth(), mSwapChain.getHeight());
-	pipelineConfig.renderPass = mSwapChain.getRenderPass();
-	pipelineConfig.pipelineLayout = mPipelineLayout;
+	std::unique_ptr<PipelineConfigInfo> pipelineConfig = Pipeline::getDefaultPipelineConfigInfo(mSwapChain.getWidth(), mSwapChain.getHeight());
+	pipelineConfig->renderPass = mSwapChain.getRenderPass();
+	pipelineConfig->pipelineLayout = mPipelineLayout;
 
 	mPipeline = std::make_unique<Pipeline>(
 		mDevice,
 		"./resources/shaders/triangle.vert.spv",
 		"./resources/shaders/triangle.frag.spv",
-		pipelineConfig);
+		*pipelineConfig);
 }
 
 void Application::createCommandBuffer() {

@@ -25,25 +25,27 @@ void Application::createPipeline() {
 		*pipelineConfig);
 }
 
-void Application::createCommandBuffer() {
+void Application::createCommandBuffers() {
+	mCommandBuffers.resize(mSwapChain.MAX_FRAMES_IN_FLIGHT);
+
 	VkCommandBufferAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	allocInfo.commandPool = mDevice.getCommandPool();
 	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandBufferCount = 1;
+	allocInfo.commandBufferCount = static_cast<uint32_t>(mCommandBuffers.size());
 
-	if (vkAllocateCommandBuffers(mDevice.device(), &allocInfo, &mCommandBuffer) != VK_SUCCESS) {
+	if (vkAllocateCommandBuffers(mDevice.device(), &allocInfo, mCommandBuffers.data()) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to allocate command buffers!");
 	}
 }
 
-void Application::recordCommandBuffer(uint32_t imageIndex) {
+void Application::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) {
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = 0; // Optional
 	beginInfo.pInheritanceInfo = nullptr; // Optional
 
-	if (vkBeginCommandBuffer(mCommandBuffer, &beginInfo) != VK_SUCCESS) {
+	if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to begin recording command buffer!");
 	}
 
@@ -57,8 +59,8 @@ void Application::recordCommandBuffer(uint32_t imageIndex) {
 	renderPassInfo.clearValueCount = 1;
 	renderPassInfo.pClearValues = &clearColor;
 
-	vkCmdBeginRenderPass(mCommandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-	mPipeline->bind(mCommandBuffer);
+	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+	mPipeline->bind(commandBuffer);
 
 	/*VkViewport viewport = VkViewport();
 	viewport.x = 0.0f;
@@ -74,10 +76,10 @@ void Application::recordCommandBuffer(uint32_t imageIndex) {
 	scissor.extent = mSwapChain.getSwapChainExtent();
 	vkCmdSetScissor(mCommandBuffer, 0, 1, &scissor);*/
 
-	vkCmdDraw(mCommandBuffer, 3, 1, 0, 0);
-	vkCmdEndRenderPass(mCommandBuffer);
+	vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+	vkCmdEndRenderPass(commandBuffer);
 
-	if (vkEndCommandBuffer(mCommandBuffer) != VK_SUCCESS) {
+	if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to record command buffer!");
 	}
 }
@@ -89,10 +91,13 @@ void Application::drawFrame() {
 		throw std::runtime_error("Failed to aquire swap chain image!");
 	}
 
-	vkResetCommandBuffer(mCommandBuffer, 0);
-	recordCommandBuffer(imageIndex);
+	// TODO: mey be should pre-record command buffers during initialization,
+	// and only update dynamic states or descriptors as needed
+	uint32_t currentFrame = mSwapChain.getCurrentFrame();
+	vkResetCommandBuffer(mCommandBuffers[currentFrame], 0);
+	recordCommandBuffer(mCommandBuffers[currentFrame], imageIndex);
 
-	res = mSwapChain.submitCommandBuffer(&mCommandBuffer, imageIndex);
+	res = mSwapChain.submitCommandBuffer(&mCommandBuffers[currentFrame], imageIndex);
 	if (res != VK_SUCCESS) {
 		throw std::runtime_error("Failed to present swap chain image!");
 	}
@@ -101,7 +106,7 @@ void Application::drawFrame() {
 Application::Application() {
 	createPipelineLayout();
 	createPipeline();
-	createCommandBuffer();
+	createCommandBuffers();
 }
 
 Application::~Application() {

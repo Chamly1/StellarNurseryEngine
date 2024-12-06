@@ -21,9 +21,11 @@ private:
 
 	VkSwapchainKHR mSwapChain;
 
-	VkSemaphore mImageAvailableSemaphore;
-	VkSemaphore mRenderFinishedSemaphore;
-	VkFence mInFlightFence;
+	std::vector<VkSemaphore> mImageAvailableSemaphores;
+	std::vector<VkSemaphore> mRenderFinishedSemaphores;
+	std::vector<VkFence> mInFlightFences;
+
+	uint32_t mCurrentFrame = 0;
 
 	VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
@@ -35,6 +37,8 @@ private:
 	void createSyncObjects();
 
 public:
+	static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
+
 	SwapChain(Device& device, VkExtent2D windowExtent);
 	~SwapChain();
 
@@ -43,6 +47,7 @@ public:
 	VkFramebuffer getFrameBuffer(int index);
 	VkRenderPass getRenderPass();
 	VkExtent2D getSwapChainExtent();
+	uint32_t getCurrentFrame();
 
 	VkResult acquireNextImage(uint32_t* imageIndex);
 	VkResult submitCommandBuffer(const VkCommandBuffer* buffer, uint32_t imageIndex);

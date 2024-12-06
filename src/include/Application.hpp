@@ -21,13 +21,13 @@ private:
 	std::unique_ptr<Pipeline> mPipeline;
 
 	VkPipelineLayout mPipelineLayout;
-	VkCommandBuffer mCommandBuffer;
+	std::vector<VkCommandBuffer> mCommandBuffers;
 
 	void createPipelineLayout();
 	void createPipeline();
-	void createCommandBuffer();
+	void createCommandBuffers();
 
-	void recordCommandBuffer(uint32_t imageIndex);
+	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
 	void drawFrame();
 

@@ -1,5 +1,6 @@
 #include "Pipeline.hpp"
 #include "utils.hpp"
+#include "Model.hpp"
 
 #include <stdexcept>
 
@@ -47,12 +48,14 @@ Pipeline::Pipeline(Device& device,
 	shaderStages[1].pNext = nullptr;
 	shaderStages[1].pSpecializationInfo = nullptr;
 
+	std::vector<VkVertexInputBindingDescription> bindingDescriptions = Vertex::getBindingDescriptions();
+	std::vector<VkVertexInputAttributeDescription> attributeDescriptions = Vertex::getAttributeDescriptions();
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-	vertexInputInfo.vertexBindingDescriptionCount = 0;
-	vertexInputInfo.vertexAttributeDescriptionCount = 0;
-	vertexInputInfo.pVertexAttributeDescriptions = nullptr;
-	vertexInputInfo.pVertexBindingDescriptions = nullptr;
+	vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescriptions.size());
+	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+	vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data();
+	vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
 	/*std::vector<VkDynamicState> dynamicStates = {
 		VK_DYNAMIC_STATE_VIEWPORT,

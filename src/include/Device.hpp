@@ -65,6 +65,8 @@ private:
 	void createLogicalDevice();
 	void createCoomandPool();
 
+	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
 public:
 	Device(Window& window);
 	~Device();
@@ -77,6 +79,13 @@ public:
 
 	SwapChainSupportDetails getSwapChainSupport();
 	QueueFamilyIndices findPhysicalQueueFamilies();
+
+	void createBuffer(
+		VkDeviceSize size,
+		VkBufferUsageFlags usage,
+		VkMemoryPropertyFlags properties,
+		VkBuffer& buffer,
+		VkDeviceMemory& bufferMemory);
 
 	Device(const Device& other) = delete;
 	Device& operator=(const Device& other) = delete;

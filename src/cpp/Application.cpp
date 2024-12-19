@@ -1,5 +1,15 @@
 #include "Application.hpp"
 
+void Application::loadModels() {
+	std::vector<Vertex> vertices{
+		{{0.0, -0.5}, {1.0, 0.0, 0.0}},
+		{{0.5, 0.5}, {0.0, 1.0, 0.0}},
+		{{-0.5, 0.5}, {0.0, 0.0, 1.0}}
+	};
+
+	mModel = std::make_unique<Model>(mDevice, vertices);
+}
+
 void Application::createPipelineLayout() {
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -76,7 +86,8 @@ void Application::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t im
 	scissor.extent = mSwapChain.getSwapChainExtent();
 	vkCmdSetScissor(mCommandBuffer, 0, 1, &scissor);*/
 
-	vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+	mModel->bind(commandBuffer);
+	mModel->draw(commandBuffer);
 	vkCmdEndRenderPass(commandBuffer);
 
 	if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
@@ -104,6 +115,7 @@ void Application::drawFrame() {
 }
 
 Application::Application() {
+	loadModels();
 	createPipelineLayout();
 	createPipeline();
 	createCommandBuffers();

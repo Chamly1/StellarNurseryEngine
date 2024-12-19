@@ -20,6 +20,8 @@ private:
 	VkDeviceMemory mVertexBufferMemory;
 	uint32_t mVertexCount;
 
+	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+
 public:
 	Model(Device& device, const std::vector<Vertex>& vertices);
 	~Model();
